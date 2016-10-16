@@ -1,6 +1,9 @@
 # ts-vscode-boilerplate
 
 [![Build Status](https://secure.travis-ci.org/remojansen/ts-vscode-boilerplate.svg?branch=master)](https://travis-ci.org/remojansen/ts-vscode-boilerplate)
+[![Dependencies](https://david-dm.org/remojansen/ts-vscode-boilerplate.svg)](https://david-dm.org/remojansen/ts-vscode-boilerplate#info=dependencies)
+[![img](https://david-dm.org/remojansen/ts-vscode-boilerplate/dev-status.svg)](https://david-dm.org/remojansen/ts-vscode-boilerplate/#info=devDependencies)
+[![img](https://david-dm.org/remojansen/ts-vscode-boilerplate/peer-status.svg)](https://david-dm.org/remojansen/ts-vscode-boilerplate/#info=peerDependenciess)
 
 Boilerplate Visual Studio Code TypeScript project.
 
