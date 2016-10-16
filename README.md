@@ -3,6 +3,8 @@ Boilerplate Visual Studio Code TypeScript project.
 
 Please visit [blog.wolksoftware.com](http://blog.wolksoftware.com/setting-up-your-typescript-vs-code-development-environment) to learn more about this template.
 
+> Note: The article uses TypeScript 1.8 and typings but this repository has been upgraded to TypeScript 2.0 and `@types` type definitions.
+
 # How to use this template?
 
 1) Download `.zip` and unzip it:
@@ -14,16 +16,15 @@ $ unzip master.zip
 2) Install dependencies and their type definitions:
 
 > Note: Before running the following commands, make sure you have [Node.js]() installed and 
-that you have installed typings and gulp as global packages:
-```
-$ npm -g install gulp
-$ npm -g install typings
-```
+that you have installed gulp a global package:
+>
+> ```
+> $ npm -g install gulp
+> ```
 
 ```
 $ cd ts-vscode-boilerplate
 $ npm install
-$ typings install
 ```
 
 3) Open in VS Code

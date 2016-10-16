@@ -20,12 +20,16 @@ var gulp        = require("gulp"),
 //* LINT
 //******************************************************************************
 gulp.task("lint", function() {
+
+    var config =  { formatter: "verbose", emitError: (process.env.CI) ? true : false };
+    
     return gulp.src([
         "source/**/**.ts",
         "test/**/**.test.ts"
     ])
-    .pipe(tslint({ }))
-    .pipe(tslint.report("verbose"));
+    .pipe(tslint(config))
+    .pipe(tslint.report());
+
 });
 
 //******************************************************************************
@@ -39,7 +43,10 @@ gulp.task("build-app", function() {
             "typings/main.d.ts/",
             "source/interfaces/interfaces.d.ts"
         ])
-        .pipe(tsc(tsProject))
+        .pipe(tsProject())
+        .on("error", function (err) {
+            process.exit(1);
+        })
         .js.pipe(gulp.dest("source/"));
 });
 
@@ -51,7 +58,10 @@ gulp.task("build-test", function() {
             "typings/main.d.ts/",
             "source/interfaces/interfaces.d.ts"
         ])
-        .pipe(tsc(tsTestProject))
+        .pipe(tsTestProject())
+        .on("error", function (err) {
+            process.exit(1);
+        })
         .js.pipe(gulp.dest("test/"));
 });
 
