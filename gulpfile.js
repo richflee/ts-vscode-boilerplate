@@ -5,6 +5,7 @@
 //******************************************************************************
 var gulp        = require("gulp"),
     browserify  = require("browserify"),
+    tsify       = require("tsify"),
     source      = require("vinyl-source-stream"),
     buffer      = require("vinyl-buffer"),
     tslint      = require("gulp-tslint"),
@@ -33,40 +34,24 @@ gulp.task("lint", function() {
 });
 
 //******************************************************************************
-//* BUILD
+//* BUILD TEST
 //******************************************************************************
-var tsProject = tsc.createProject("tsconfig.json");
-
-gulp.task("build-app", function() {
-    return gulp.src([
-            "source/**/**.ts",
-            "typings/main.d.ts/",
-            "source/interfaces/interfaces.d.ts"
-        ])
-        .pipe(tsProject())
-        .on("error", function (err) {
-            process.exit(1);
-        })
-        .js.pipe(gulp.dest("source/"));
-});
-
 var tsTestProject = tsc.createProject("tsconfig.json");
 
 gulp.task("build-test", function() {
     return gulp.src([
-            "test/**/*.ts",
+            "source/**/**.ts",
+            "test/**/**.test.ts",
             "typings/main.d.ts/",
-            "source/interfaces/interfaces.d.ts"
-        ])
+            "source/interfaces/interfaces.d.ts"],
+            { base: "." }
+        )
         .pipe(tsTestProject())
         .on("error", function (err) {
             process.exit(1);
         })
-        .js.pipe(gulp.dest("test/"));
-});
-
-gulp.task("build", function(cb) {
-    runSequence(["build-app", "build-test"], cb);
+        .js
+        .pipe(gulp.dest("."));
 });
 
 //******************************************************************************
@@ -87,12 +72,12 @@ gulp.task("test", ["istanbul:hook"], function() {
 });
 
 //******************************************************************************
-//* BUNDLE
+//* BUILD DEV
 //******************************************************************************
-gulp.task("bundle", function() {
+gulp.task("build", function() {
   
     var libraryName = "myapp";
-    var mainTsFilePath = "source/main.js";
+    var mainTsFilePath = "source/main.ts";
     var outputFolder   = "dist/";
     var outputFileName = libraryName + ".min.js";
 
@@ -101,13 +86,16 @@ gulp.task("bundle", function() {
         standalone : libraryName
     });
     
-    return bundler.add(mainTsFilePath)
+    return bundler
+        .add(mainTsFilePath)
+        .plugin(tsify, { noImplicitAny: true })
         .bundle()
+        .on('error', function (error) { console.error(error.toString()); })
         .pipe(source(outputFileName))
         .pipe(buffer())
-        .pipe(sourcemaps.init({ loadMaps: true }))
+        .pipe(sourcemaps.init({ loadMaps: true }))        
         .pipe(uglify())
-        .pipe(sourcemaps.write('./'))
+        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest(outputFolder));
 });
 
@@ -128,5 +116,5 @@ gulp.task("watch", ["default"], function () {
 //* DEFAULT
 //******************************************************************************
 gulp.task("default", function (cb) {
-    runSequence("lint", "build", "test", "bundle", cb);
+    runSequence("lint", "build-test", "test", "build", cb);
 });
